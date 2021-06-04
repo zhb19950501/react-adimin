@@ -3,10 +3,17 @@ import React, { Component } from 'react'
 
 import {NormalLoginForm} from "./UserForm"
 import "./login.less"
-import logo from "./images/login-logo.png"
+import logo from "../../assets/images/login-logo.png"
+import memoryUtils from '../../utils/memoryUtils'
+import { Redirect } from 'react-router'
+
 
 export default class Login extends Component {
     render() {
+        // 判断用户是否登录，如果已经登录(内存或者本地user有值)则自动跳转到admin界面
+        if(memoryUtils.user && memoryUtils.user._id){
+            return <Redirect to="/"/>
+        }
         return (
             <div className="login"> 
                 <header className="login-header">
