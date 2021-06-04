@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { Form, Input, Button, message } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import {reqLoading} from "../../../api"
@@ -15,6 +16,32 @@ export const NormalLoginForm = (a) => {
             message.error("登录失败," + result.msg)
         }
         console.log(result)
+=======
+import { Form, Input, Button,message } from 'antd';
+import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import {useHistory} from "react-router-dom"
+import {reqLogin} from "../../../api"
+import memoryUtils from "../../../utils/memoryUtils" 
+import localStoreUtils from "../../../utils/localStoreUtils" 
+
+export const NormalLoginForm = () => {
+    const history = useHistory()
+    const onFinish = async (values) => {
+        const {username,password} = values
+        const response =  await reqLogin(username,password)
+        const result = response.data
+        if(result.status === 0 ){
+            // 将返回的用户信息保存在内存中
+            const user = result.data
+            memoryUtils.user = user
+            localStoreUtils.saveUser(user)
+            history.replace("/")
+            message.success("登录成功")
+        }else{
+            message.error("登录失败")
+        }
+     
+>>>>>>> a5611b0b3c12e54da6952f53726bda26f28ec463
     };
     
     return (
@@ -35,6 +62,7 @@ export const NormalLoginForm = (a) => {
                         message: 'Please input your Username!',
                     },
                     {
+<<<<<<< HEAD
                         validator:(_,value)=>{
                             const reg = /^[0-9a-zA-Z_]+$/
                             if(reg.test(value)){
@@ -42,11 +70,26 @@ export const NormalLoginForm = (a) => {
                             }else{
                                 return Promise.reject("请使用数字字母和下划线")
                             }
+=======
+                        validator: (_, value) => {
+                            const reg = /^[0-9a-zA-Z_]+$/
+                            if (reg.test(value)) {
+                                return Promise.resolve()
+                            } else {
+                                return Promise.reject("不能使用数字字母和下划线外的符号作为用户名")
+                            }
+
+>>>>>>> a5611b0b3c12e54da6952f53726bda26f28ec463
                         }
                     }
                 ]}
+                initialValue="admin"
             >
+<<<<<<< HEAD
                 <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username"/>
+=======
+                <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="用户名" />
+>>>>>>> a5611b0b3c12e54da6952f53726bda26f28ec463
             </Form.Item>
             <Form.Item
                 name="password"
@@ -60,7 +103,7 @@ export const NormalLoginForm = (a) => {
                 <Input
                     prefix={<LockOutlined className="site-form-item-icon" />}
                     type="password"
-                    placeholder="Password"
+                    placeholder="密码"
                 />
             </Form.Item>
             <Form.Item>

@@ -44,7 +44,11 @@ table {
 	border-spacing: 0;
 }
 
+<<<<<<< HEAD
 html,body,#root div,#root{
+=======
+html,body,#root{
+>>>>>>> a5611b0b3c12e54da6952f53726bda26f28ec463
 	width: 100%;
 	height: 100%;
   } 
