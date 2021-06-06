@@ -1,22 +1,3 @@
-<<<<<<< HEAD
-import { Form, Input, Button, message } from 'antd';
-import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import {reqLoading} from "../../../api"
-import {useHistory} from "react-router-dom"
-
-export const NormalLoginForm = (a) => {
-    const history = useHistory()
-    const onFinish = async (values) => {
-        console.log('Received values of form: ', values);
-        const result = await reqLoading(values)
-        if(result.status === 0){
-            message.success("登录成功")
-            history.replace("/")
-        }else{
-            message.error("登录失败," + result.msg)
-        }
-        console.log(result)
-=======
 import { Form, Input, Button,message } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import {useHistory} from "react-router-dom"
@@ -41,7 +22,6 @@ export const NormalLoginForm = () => {
             message.error("登录失败")
         }
      
->>>>>>> a5611b0b3c12e54da6952f53726bda26f28ec463
     };
     
     return (
@@ -62,15 +42,6 @@ export const NormalLoginForm = () => {
                         message: 'Please input your Username!',
                     },
                     {
-<<<<<<< HEAD
-                        validator:(_,value)=>{
-                            const reg = /^[0-9a-zA-Z_]+$/
-                            if(reg.test(value)){
-                                return Promise.resolve()
-                            }else{
-                                return Promise.reject("请使用数字字母和下划线")
-                            }
-=======
                         validator: (_, value) => {
                             const reg = /^[0-9a-zA-Z_]+$/
                             if (reg.test(value)) {
@@ -79,17 +50,11 @@ export const NormalLoginForm = () => {
                                 return Promise.reject("不能使用数字字母和下划线外的符号作为用户名")
                             }
 
->>>>>>> a5611b0b3c12e54da6952f53726bda26f28ec463
                         }
                     }
                 ]}
-                initialValue="admin"
             >
-<<<<<<< HEAD
-                <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username"/>
-=======
                 <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="用户名" />
->>>>>>> a5611b0b3c12e54da6952f53726bda26f28ec463
             </Form.Item>
             <Form.Item
                 name="password"

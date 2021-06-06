@@ -44,9 +44,5 @@
       "last 1 safari version"
     ]
   },
-<<<<<<< HEAD
   "proxy":"http://zlx.cool:5000"
-=======
-  "proxy": "http://zlx.cool:5000"
->>>>>>> a5611b0b3c12e54da6952f53726bda26f28ec463
 }

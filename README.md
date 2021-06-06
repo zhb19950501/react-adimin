@@ -3,10 +3,8 @@
         需要把引入该背景的每一个父元素的高度都设为100%才可以实现背景图片全屏展示
 
 
-<<<<<<< HEAD
 ## 线上服务器
     http：zlx.cool：5000
-=======
 ## JS
     1.async 和 await 简化代码，去除promise.then().catch()里的回调模式
         await 写在要等待的promise对象的左边 const result = await promise
@@ -19,4 +17,3 @@
 
 
 ## 
->>>>>>> a5611b0b3c12e54da6952f53726bda26f28ec463
