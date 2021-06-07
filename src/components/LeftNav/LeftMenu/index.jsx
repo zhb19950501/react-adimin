@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from "react-router-dom"
+import { Link,withRouter} from "react-router-dom"
 import { Menu } from 'antd';
 
 // import {
@@ -13,43 +13,75 @@ import { Menu } from 'antd';
 // } from '@ant-design/icons';
 
 import menuList from "../../../config/menuConfig"
-import { div } from 'prelude-ls';
 const { SubMenu } = Menu;
 
-export default class LeftMenu extends React.Component {
-  
-  getNodesFromMenuList(menuList){
-    return menuList.map((menuEle) => {
+class LeftMenu extends React.Component {
+  constructor(props){
+    super(props)
+    this.menuNodes = this.getNodesFromMenuListUseReduce(menuList)
+  }
+
+  // getNodesFromMenuList(menuList) {
+  //   return menuList.map((menuEle) => {
+  //     if (!menuEle.children) {
+  //       return (
+  //         <Menu.Item key={menuEle.key} icon={<menuEle.icon />}>
+  //           <Link to={menuEle.key}>{menuEle.title}</Link>
+  //         </Menu.Item>
+  //       )
+  //     } else {
+  //       return (
+  //         <SubMenu key={menuEle.key} icon={<menuEle.icon />} title={menuEle.title}>
+  //           {this.getNodesFromMenuList(menuEle.children)}
+  //         </SubMenu>
+  //       )
+  //     }
+
+  //   })
+  // }
+
+  // 使用reduce实现上面map的功能
+  getNodesFromMenuListUseReduce=(menuList)=> {
+    const path = this.props.location.pathname
+
+    return menuList.reduce((pre, menuEle) => {
       if (!menuEle.children) {
-        return (
+        pre.push((
           <Menu.Item key={menuEle.key} icon={<menuEle.icon />}>
             <Link to={menuEle.key}>{menuEle.title}</Link>
           </Menu.Item>
-        )
-      }else{
-        return (
+        ))}
+      else{
+        const openEle = menuEle.children.find((subMenuEle)=>{
+            return subMenuEle.key === path
+        })
+        if(openEle){
+          this.openKeys = menuEle.key
+        }
+        pre.push((
           <SubMenu key={menuEle.key} icon={<menuEle.icon />} title={menuEle.title}>
-            {this.getNodesFromMenuList(menuEle.children)}
+            {this.getNodesFromMenuListUseReduce(menuEle.children)}
           </SubMenu>
-        )
-      }
-
-    })
+        ))
+        }
+      return pre
+    }, [])
   }
 
   render() {
-
+    const path = this.props.location.pathname
+    console.log("render()")
     return (
-      <div >
+      
         <Menu
-          defaultSelectedKeys={['1']}
-          defaultOpenKeys={['sub1']}
+          selectedKeys={[path]}
+          defaultOpenKeys={[this.openKeys]}
           mode="inline"
           theme="dark"
 
         >
-         
-          {this.getNodesFromMenuList(menuList)}
+
+          {this.menuNodes}
           {/* <Menu.Item key="/home" icon={<PieChartOutlined />}>
             <Link to="/home">首页</Link>
           </Menu.Item>
@@ -69,8 +101,9 @@ export default class LeftMenu extends React.Component {
             <Link to="/role">角色管理</Link>
           </Menu.Item> */}
         </Menu>
-      </div>
+      
     );
   }
 }
 
+export default withRouter(LeftMenu)

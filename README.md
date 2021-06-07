@@ -16,4 +16,5 @@
         在ajax模块里，通过返回一个新的promise对象，在其中处理发送的异步请求，出现了问题时，在catch里不调用新创建的promise对象的reject方法，这样就不会把错误传递出去
 
 
-## 
+## React
+    this.props.location.pathname

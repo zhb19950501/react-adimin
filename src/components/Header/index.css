@@ -1,4 +1,37 @@
 .header {
   height: 80px;
+  background-color: white;
+}
+.header .header-top {
+  height: 40px;
+  border-bottom: 1px solid #1da57a;
+  line-height: 40px;
+  text-align: right;
+}
+.header .header-top button {
+  color: turquoise;
+  margin: 0 10px;
+  border: none;
+  background-color: transparent;
+}
+.header .header-bottom {
+  background-color: turquoise;
+  height: 40px;
+  display: flex;
+  align-items: center;
+}
+.header .header-bottom .header-bottom-left {
+  width: 25%;
+  text-align: center;
+  font-size: 20px;
+}
+.header .header-bottom .header-bottom-right {
+  width: 75%;
+  text-align: right;
+  margin-right: 20px;
+}
+.header .header-bottom .header-bottom-right img {
+  width: 20px;
+  margin: 0 10px;
 }
 /*# sourceMappingURL=./index.css.map */

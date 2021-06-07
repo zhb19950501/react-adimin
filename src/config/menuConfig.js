@@ -20,7 +20,7 @@ const menuList = [
     },
     {
         title: "商品",
-        key:"products",
+        key:"/products",
         icon: GiftOutlined,
         children: [
             {
