@@ -1,0 +1,1 @@
+export const GAODEKEY = "d568e40c4fafbf2357600828863472b0"

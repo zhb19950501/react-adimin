@@ -1,5 +1,5 @@
 //  local 数据存储管理的工具模块
-// localStorage对于低版浏览器兼容性可能不太好，可以使用第三方库store,这个库可以自动转换成json
+// localStorage对于低版浏览器兼容性可能不太好，可以使用第三方库store,这个库可以自动将对象转换成json
 import store from "store"
 
 const USER_KEY = "user_key"

@@ -18,6 +18,7 @@ const { SubMenu } = Menu;
 class LeftMenu extends React.Component {
   constructor(props){
     super(props)
+    // 初始化得到菜单列表节点数组
     this.menuNodes = this.getNodesFromMenuListUseReduce(menuList)
   }
 
@@ -70,7 +71,6 @@ class LeftMenu extends React.Component {
 
   render() {
     const path = this.props.location.pathname
-    console.log("render()")
     return (
       
         <Menu
