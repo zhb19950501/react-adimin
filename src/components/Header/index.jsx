@@ -63,9 +63,12 @@ export default function Header() {
     const History = useHistory()
     const logOut=()=>{
         Modal.confirm({
-            title: 'Do you Want to delete these items?',
+            title: '确定退出登录吗?',
             icon: <ExclamationCircleOutlined />,
-            content: 'Some descriptions',
+            content: `当前用户为${username}`,
+            okText:"确认",
+            cancelText:"取消",
+
             onOk() {
                 localStoreUtils.removeUser()
                 memoryUtils.user={}
