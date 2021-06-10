@@ -20,7 +20,6 @@ export const reqLogin = (username, password) => ajax("/login", {
 
 export const reqAddUser = (user) => ajax("/manage/user/add", user, "POST")
 
-
 export const reqWeather = () => {
     const reqCityAdcode = ()=>{
         const URL = `https://restapi.amap.com/v3/ip?key=${GAODEKEY}`
@@ -52,4 +51,29 @@ export const reqWeather = () => {
 
 }
 
+// /manage/category/list?parentId=0 获取分类列表
+export const reqCategory =  (parentId)=>{
+    return new Promise(
+        async (resolve,reject)=>{
+            const response = await ajax("/manage/category/list",{parentId})
+            if(response.data.status === 0){
+                resolve(response.data.data)
+            }else{
+                message.error("获取分类列表失败")
+            }
+        }
+        
+    )
 
+
+}
+
+// /manage/category/add 添加分类
+export const reqAddCategory = (categoryName,parentId)=>{
+    return ajax("/manage/category/add",{categoryName,parentId},"POST")
+}
+
+// /manage/category/upadte 更新分类
+export const reqUpdateCategory = ({categoryName,categoryId})=>{
+    return ajax("/manage/category/upadte",{categoryName,categoryId},"POST")
+}
