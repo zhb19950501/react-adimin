@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { useLocation,useHistory } from "react-router"
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { Modal } from 'antd';
+import LinkButton from "../../components/LinkButton"
 import memoryUtils from "../../utils/memoryUtils"
 import localStoreUtils from "../../utils/localStoreUtils"
 import { reqWeather } from "../../api/"
@@ -85,7 +86,7 @@ export default function Header() {
         <div className="header">
             <div className="header-top">
                 <span>欢迎，{username}</span>
-                <button onClick={logOut}>退出</button>
+                <LinkButton onClick={logOut}>退出</LinkButton>
             </div>
             <div className="header-bottom">
                 <div className="header-bottom-left">
