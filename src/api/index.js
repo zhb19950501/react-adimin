@@ -73,7 +73,7 @@ export const reqAddCategory = (categoryName,parentId)=>{
     return ajax("/manage/category/add",{categoryName,parentId},"POST")
 }
 
-// /manage/category/upadte 更新分类
+// /manage/category/update 更新分类
 export const reqUpdateCategory = ({categoryName,categoryId})=>{
-    return ajax("/manage/category/upadte",{categoryName,categoryId},"POST")
+    return ajax("/manage/category/update",{categoryName,categoryId},"POST")
 }

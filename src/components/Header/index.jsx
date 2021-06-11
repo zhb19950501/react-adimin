@@ -74,11 +74,9 @@ export default function Header() {
                 localStoreUtils.removeUser()
                 memoryUtils.user={}
                 History.replace("/login")
-            },
-            onCancel() {
-              console.log('Cancel');
-            },
-          });
+            }
+
+          })
     }
 
 
