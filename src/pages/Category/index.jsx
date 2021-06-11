@@ -13,18 +13,24 @@ export default class Category extends Component {
         loading:false
     }
     
+    handleCheckChild=(text)=>{
+        console.log(text.parentId)
+        const parentId = text._id
+        this.getCategory(parentId)
+    }
 
-    getCategory = async () => {
+    getCategory = async (parentId) => {
         this.setState({loading:true})
-        const dataSource = await reqCategory(0)
+        const dataSource = await reqCategory(parentId)
         
         this.setState({
             dataSource,
             loading:false
         })
     }
+
     componentDidMount() {
-        this.getCategory()
+        this.getCategory("0")
     }
     columns = [
         {
@@ -35,10 +41,12 @@ export default class Category extends Component {
             title: '操作',
             width:300,
             render: (text) => {
+                
                 return (
                     <span>
                         <LinkButton>修改分类</LinkButton>
-                        <LinkButton>查看子分类</LinkButton>
+                        {/* <LinkButton onClick={()=>{this.handleCheckChild(text)}}>查看子分类</LinkButton> */}
+                        {text.parentId === "0"? <LinkButton onClick={()=>{this.handleCheckChild(text)}}>查看子分类</LinkButton>:null}
                     </span>
                 )
             }
@@ -51,9 +59,12 @@ export default class Category extends Component {
                 <PlusOutlined />
                 <span>添加</span>
             </LinkButton>)
+        const {dataSource} = this.state
+        console.log(dataSource)
+
         return (
 
-            <Card title="一级分类列表" extra={extra} >
+            <Card title={ dataSource.parentId==="0" ? "一级分类列表" :(<LinkButton>一级分类列表<span>aaa</span></LinkButton>)} extra={extra} >
                 <Table
                     rowKey="_id"
                     dataSource={this.state.dataSource}
