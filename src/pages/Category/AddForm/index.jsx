@@ -1,13 +1,23 @@
-import React from 'react'
+import React,{useEffect} from 'react'
 import {Form,Select,Input } from "antd"
 
 const Item = Form.Item
 const Option = Select.Option
 export default function AddForm(props) {
-    const {currentPageData,parentId,parentName} = props
+    const {currentPageData,parentId,parentName,getFormInstance} = props
+    const [form] = Form.useForm()
+    useEffect(() => {
+        getFormInstance(form)
+    }, [form,getFormInstance])
+
+    useEffect(()=>{
+        form.setFieldsValue({parentName})
+    },[form,parentName])
+
+
     return (
-    <Form>
-        <Item name="category" label="选择分类" labelCol={{span:6}} labelAlign="left" initialValue={parentId}>
+    <Form form={form}>
+        <Item name="parentName" label="选择分类" labelCol={{span:6}} labelAlign="left">
             <Select>
                 <Option value={parentId}>{parentName}</Option>
                 {

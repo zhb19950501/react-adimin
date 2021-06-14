@@ -9,10 +9,11 @@ export default function UpdateForm(props) {
     useEffect(()=>{
         form.setFieldsValue({updateName})
     },[form,updateName])
+
     useEffect(()=>{
         getFormInstance(form)
     },[getFormInstance,form])
-    console.log("渲染")
+
     return (
     <Form form={form} >
         <Item name="updateName" label={"将   "+updateName+"   修改为"} >

@@ -59,7 +59,7 @@ export const reqCategory =  (parentId)=>{
             if(response.data.status === 0){
                 resolve(response.data.data)
             }else{
-                message.error("获取分类列表失败")
+                message.error("获取表格数据失败")
             }
         }
         

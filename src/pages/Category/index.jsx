@@ -7,35 +7,45 @@ import {
 import LinkButton from "../../components/LinkButton"
 import AddForm from "./AddForm"
 import UpdateForm from "./UpdateForm"
-import { reqCategory,reqUpdateCategory } from "../../api"
+import { reqCategory,reqUpdateCategory,reqAddCategory} from "../../api"
 
 export default class Category extends Component {
     state = {
 
         dataSource: [], // 表格中的所有数据
         loading: false, // 是否正在加载
-        parentName: "", //父级名称
+        parentName: "一级分类列表", //父级名称
         parentId: "0",   //父级Id
         visibleStatus: 0, // 0表示全部隐藏，1显示添加确认框，2显示更新确认框
         updateName: "", // 更新元素名称
         currentRowData:{},   //待更新元素的所有数据
-        currentPageData:[]
+        currentPageData:[],
+        currentName:"一级分类列表",
+        currentId:"0",
+        usedDatas:[{id:"0",name:"一级分类列表"}]
 
     }
 
     // 点击查看子分类的回调
-    handleCheckChild = (text) => {
+    handleCheckChild = async (text) => {
         // console.log(text) text为当前行的数据
-        const parentId = text._id
-        const parentName = text.name
-        this.setState({ parentName })
-        this.getCategory(parentId)
+        let {usedDatas} = this.state
+        const currentId = text._id
+        const currentName = text.name
+        const currentData = {id:currentId,name:currentName}
+        usedDatas = [...usedDatas,currentData]
+        const dataSource = await this.getCategory(currentId)
+        this.setState({dataSource,usedDatas})
 
     }
     // 点击查看子分类后，在标题点击一级分类列表后的回调
-    handleCheckParent = () => {
-        this.getCategory("0")
-        this.setState({ parentId: "0" })
+    handleCheckParent = async(id,index) => {
+        const dataSource = await this.getCategory(id)
+        const {usedDatas} = this.state
+        const newUsedDatas = usedDatas.slice(0,index+1)
+        this.setState({dataSource,usedDatas:newUsedDatas})
+        // const dataSource = await this.getCategory(parentId)
+        // this.setState({ parentId: "0",parentName: "一级分类列表"})
     }
 
     // 点击添加的回调 
@@ -45,7 +55,11 @@ export default class Category extends Component {
 
     // 添加对话框点击Ok后的回调
     handleAddCategory = () => {
+        const categoryName = this.form.getFieldValue("newCategory")
+        const parentName = this.form.getFieldValue("parentName")
+        console.log(categoryName,parentName)
         this.setState({ visibleStatus: 0 })
+        // reqAddCategory()
     }
 
     // 点击修改分类的回调
@@ -76,17 +90,13 @@ export default class Category extends Component {
         this.form.resetFields()
     }
 
-    // 根据传入的parentId获取数据
-    getCategory = async (parentId) => {
+    // 根据传入的id获取数据
+    getCategory = async (id) => {
         this.setState({ loading: true })
-        const dataSource = await reqCategory(parentId)
-        const currentPageData = dataSource.slice(0,10)
-        this.setState({
-            dataSource,
-            loading: false,
-            parentId,
-            currentPageData
-        })
+        const dataSource = await reqCategory(id)
+        this.setState({loading:false})
+        return dataSource
+
     }
     //表格更新变化时的回调
     handleTableChange=(pagination)=>{
@@ -103,7 +113,18 @@ export default class Category extends Component {
 
     // 组件挂载后获取数据更新组件
     componentDidMount() {
-        this.getCategory("0")
+        const getData = async()=>{
+            const dataSource = await this.getCategory("0")
+            // const currentPageData = dataSource.slice(0,10)
+            this.setState({dataSource,loading:false})
+        }
+        getData()
+        // const currentPageData = dataSource.slice(0,10)
+        // this.setState({
+        //     dataSource,
+        //     loading: false,
+            // currentPageData
+        // })
     }
     // 表头
     columns = [
@@ -119,9 +140,8 @@ export default class Category extends Component {
                 return (
                     <span>
                         <LinkButton onClick={() => { this.showUpdateModal(text) }}>修改分类</LinkButton>
-                        {text.parentId === "0" ?
-                            <LinkButton onClick={() => { this.handleCheckChild(text) }}>查看子分类</LinkButton> :
-                            null}
+                        <LinkButton onClick={() => { this.handleCheckChild(text) }}>查看子分类</LinkButton>
+                            
                     </span>
                 )
             }
@@ -135,17 +155,24 @@ export default class Category extends Component {
                 <PlusOutlined />
                 <span>添加</span>
             </LinkButton>)
-        const { dataSource, parentName, loading, visibleStatus, parentId, updateName,currentPageData } = this.state
+        const { dataSource, parentName, loading, visibleStatus, parentId, updateName,currentPageData,usedDatas } = this.state
+
         return (
 
             <Card
-                title={parentId === "0" ?
-                    "一级分类列表" :
-                    (<span>
-                        <LinkButton onClick={this.handleCheckParent}>一级分类列表</LinkButton>
-                        <SwapRightOutlined />
-                        <span>{parentName}</span>
-                    </span>)}
+                title={
+                    usedDatas.map((useddata,index)=>{
+                        if(index<usedDatas.length-1){
+                            return(
+                                <LinkButton onClick={()=>{this.handleCheckParent(useddata.id,index)}} key={useddata.id}>{useddata.name}<SwapRightOutlined /></LinkButton>
+                            )
+                        }else{
+                            return(
+                                <span key={useddata.id}>{useddata.name}</span>
+                            )
+                        }
+                    })
+                }
 
                 extra={extra} >
                 <Table
@@ -167,7 +194,7 @@ export default class Category extends Component {
                     okText="确定"
                     cancelText="取消"
                 >
-                    <AddForm currentPageData={currentPageData} parentId={parentId} parentName={parentName}/>
+                    <AddForm currentPageData={currentPageData} parentId={parentId} parentName={parentName} getFormInstance={this.getFormInstance}/>
                 </Modal>
 
                 <Modal

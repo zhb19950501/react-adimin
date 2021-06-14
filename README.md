@@ -5,6 +5,7 @@
 
 ## 线上服务器
     http：zlx.cool：5000
+    http://159.75.128.32:5000
 ## JS
     1.async 和 await 简化代码，去除promise.then().catch()里的回调模式
         await 写在要等待的promise对象的左边 const result = await promise
@@ -18,3 +19,8 @@
 
 ## React
     this.props.location.pathname
+
+
+## antd
+    form 表单初始值旨在每次表格渲染的时候会套用，要实时更改，应该使用form.setFieldsValue({FormItemName:newValue})
+        该方法传入的配置对象，键为form表单的name属性值，name在antd的组件里相当于它的Id
