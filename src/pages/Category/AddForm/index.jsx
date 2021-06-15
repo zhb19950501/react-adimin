@@ -11,12 +11,12 @@ export default function AddForm(props) {
     }, [form,getFormInstance])
 
     useEffect(()=>{
-        form.setFieldsValue({currentName})
-    },[form,currentName])
+        form.setFieldsValue({currentName:currentId})
+    },[form,currentId])
     // console.log("重新渲染，当前所处id为" + currentId +"所处分类为" + currentName)
     return (
     <Form form={form}>
-        <Item name="currentName" label="在分类" labelCol={{span:6}} labelAlign="left">
+        <Item name="currentName" label="在分类" labelCol={{span:6}} labelAlign="left" >
             <Select>
                 <Option value={currentId} key={currentId}>{currentName}</Option>
                 {

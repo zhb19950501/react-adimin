@@ -82,16 +82,17 @@ export default class Category extends Component {
         const categoryName = this.form.getFieldValue("newCategory")
         let currentId = this.form.getFieldValue("currentName")
         this.setState({ visibleStatus: 0 })
-        if(currentId === this.state.currentName){
-            currentId = this.state.currentId
+        if(currentId === this.state.currentId){
+            // 如果在当前目录下添加，则更新数据
             reqAddCategory(categoryName,currentId)
-            const dataSource = this.getCategory(currentId)
+            const dataSource = await this.getCategory(currentId)
             this.setState({dataSource})
-            return
+            this.form.resetFields()
+        }else{
+            // 否则不用更新，继续维持当前页面即可
+            reqAddCategory(categoryName,currentId)
+            this.form.resetFields()
         }
-        reqAddCategory(categoryName,currentId)
-        console.log(categoryName,currentId)
-        this.form.resetFields()
 
     }
 
