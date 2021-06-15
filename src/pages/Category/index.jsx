@@ -13,39 +13,63 @@ export default class Category extends Component {
     state = {
 
         dataSource: [], // 表格中的所有数据
-        loading: false, // 是否正在加载
-        parentName: "一级分类列表", //父级名称
-        parentId: "0",   //父级Id
+        loading: true, // 是否正在加载
         visibleStatus: 0, // 0表示全部隐藏，1显示添加确认框，2显示更新确认框
         updateName: "", // 更新元素名称
-        currentRowData:{},   //待更新元素的所有数据
-        currentPageData:[],
-        currentName:"一级分类列表",
-        currentId:"0",
+        currentRowData:{},   //点击更新时，所在行的数据
+        currentPageData:[], //当前显示页表格数据源
+        currentName:"一级分类列表", //当前所处分类名称
+        currentId:"0",  // 当前所处分类的ID
         usedDatas:[{id:"0",name:"一级分类列表"}]
 
     }
 
     // 点击查看子分类的回调
     handleCheckChild = async (text) => {
-        // console.log(text) text为当前行的数据
         let {usedDatas} = this.state
         const currentId = text._id
         const currentName = text.name
         const currentData = {id:currentId,name:currentName}
+        // 将当前行数据放入已使用数据中
         usedDatas = [...usedDatas,currentData]
         const dataSource = await this.getCategory(currentId)
-        this.setState({dataSource,usedDatas})
+        this.setState({dataSource,usedDatas,currentId,currentName})
 
     }
     // 点击查看子分类后，在标题点击一级分类列表后的回调
-    handleCheckParent = async(id,index) => {
+    handleCheckParent = async(usedData,index) => {
+        // 根据点击的标题的id获取新数据
+        const {id,name} = usedData
         const dataSource = await this.getCategory(id)
+        // 获取新的标题信息
         const {usedDatas} = this.state
-        const newUsedDatas = usedDatas.slice(0,index+1)
-        this.setState({dataSource,usedDatas:newUsedDatas})
-        // const dataSource = await this.getCategory(parentId)
-        // this.setState({ parentId: "0",parentName: "一级分类列表"})
+        const newusedDatas = usedDatas.slice(0,index+1)
+        // 设置新数据源，新标题信息，保存当前所处目录级别
+        this.setState({dataSource,usedDatas:newusedDatas,currentId:id,currentName:name})
+
+    }
+
+    // 点击修改分类的回调
+    showUpdateModal = (text) => {
+        this.setState({ visibleStatus: 2, currentRowData:text})
+    }
+    // 修改对话框点击OK后的回调
+    handleUpdateCategory = async() => {
+        const {currentRowData,currentId} = this.state
+        // 0.隐藏对话框
+        this.setState({visibleStatus:0})
+        // 1.获取对话框中用户输入的数据
+        const categoryNewName = this.form.getFieldValue("updateName")
+        // 2.清空对话框
+        this.form.resetFields()
+        // 3.获取用户点击修改更新行的数据的id
+        const categoryId = currentRowData._id
+        // 4.发送请求更新数据库
+        reqUpdateCategory({categoryName:categoryNewName,categoryId})
+        // 5.获取新数据
+        const dataSource = await this.getCategory(currentId)
+        // 6.更新表格
+        this.setState({dataSource})
     }
 
     // 点击添加的回调 
@@ -54,31 +78,24 @@ export default class Category extends Component {
     }
 
     // 添加对话框点击Ok后的回调
-    handleAddCategory = () => {
+    handleAddCategory = async() => {
         const categoryName = this.form.getFieldValue("newCategory")
-        const parentName = this.form.getFieldValue("parentName")
-        console.log(categoryName,parentName)
+        let currentId = this.form.getFieldValue("currentName")
         this.setState({ visibleStatus: 0 })
-        // reqAddCategory()
+        if(currentId === this.state.currentName){
+            currentId = this.state.currentId
+            reqAddCategory(categoryName,currentId)
+            const dataSource = this.getCategory(currentId)
+            this.setState({dataSource})
+            return
+        }
+        reqAddCategory(categoryName,currentId)
+        console.log(categoryName,currentId)
+        this.form.resetFields()
+
     }
 
-    // 点击修改分类的回调
-    showUpdateModal = (text) => {
-        this.setState({ visibleStatus: 2, updateName: text.name,currentRowData:text})
-    }
-    // 修改对话框点击OK后的回调
-    handleUpdateCategory = () => {
-        const {parentId,currentRowData} = this.state
-        // 1.隐藏对话框
-        this.setState({ visibleStatus: 0 })
-        // 2.发送请求修改数据库中的数据
-        const categoryName = this.form.getFieldValue("updateName")
-        this.form.resetFields()
-        const categoryId = currentRowData._id
-        reqUpdateCategory({categoryName,categoryId})
-        // 3.更新表格
-        this.getCategory(parentId)
-    }
+    
     // 获取表单的form对象，form对象上有很多神奇方法可以操作表单
     getFormInstance=(form)=>{
         this.form = form
@@ -100,31 +117,30 @@ export default class Category extends Component {
     }
     //表格更新变化时的回调
     handleTableChange=(pagination)=>{
-        console.log(pagination)
+        // 0.获取当前所处页编号及每页显示数据的数量
         const {current,pageSize} = pagination
+        // 1.获取当前所处页内的表格数据
         const startNum = (current-1)*pageSize
         const endNum = current * pageSize 
         const {dataSource} = this.state
         // slice方法包头不包尾
         const currentPageData = dataSource.slice(startNum,endNum)
+        // 2.更新当前页表格数据到状态
         this.setState({currentPageData})
-        console.log(currentPageData)
     }
 
     // 组件挂载后获取数据更新组件
     componentDidMount() {
         const getData = async()=>{
+            // 获取初始表格数据
             const dataSource = await this.getCategory("0")
-            // const currentPageData = dataSource.slice(0,10)
-            this.setState({dataSource,loading:false})
+            // 获取当前页表格数据
+            const currentPageData = dataSource.slice(0,10)
+            // 更新到状态
+            this.setState({dataSource,loading:false,currentPageData})
         }
         getData()
-        // const currentPageData = dataSource.slice(0,10)
-        // this.setState({
-        //     dataSource,
-        //     loading: false,
-            // currentPageData
-        // })
+  
     }
     // 表头
     columns = [
@@ -155,20 +171,20 @@ export default class Category extends Component {
                 <PlusOutlined />
                 <span>添加</span>
             </LinkButton>)
-        const { dataSource, parentName, loading, visibleStatus, parentId, updateName,currentPageData,usedDatas } = this.state
-
+        const { dataSource, currentId,currentName, loading, visibleStatus, currentRowData,currentPageData,usedDatas } = this.state
+        const updateName = currentRowData.name
         return (
 
             <Card
                 title={
-                    usedDatas.map((useddata,index)=>{
+                    usedDatas.map((usedData,index)=>{
                         if(index<usedDatas.length-1){
                             return(
-                                <LinkButton onClick={()=>{this.handleCheckParent(useddata.id,index)}} key={useddata.id}>{useddata.name}<SwapRightOutlined /></LinkButton>
+                                <LinkButton onClick={()=>{this.handleCheckParent(usedData,index,)}} key={usedData.id}>{usedData.name}<SwapRightOutlined /></LinkButton>
                             )
                         }else{
                             return(
-                                <span key={useddata.id}>{useddata.name}</span>
+                                <span key={usedData.id}>{usedData.name}</span>
                             )
                         }
                     })
@@ -194,7 +210,7 @@ export default class Category extends Component {
                     okText="确定"
                     cancelText="取消"
                 >
-                    <AddForm currentPageData={currentPageData} parentId={parentId} parentName={parentName} getFormInstance={this.getFormInstance}/>
+                    <AddForm currentPageData={currentPageData} currentId={currentId} currentName={currentName} getFormInstance={this.getFormInstance}/>
                 </Modal>
 
                 <Modal

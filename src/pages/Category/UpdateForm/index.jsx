@@ -24,6 +24,6 @@ export default function UpdateForm(props) {
     ) 
 }
 UpdateForm.propTypes={
-    updateName:PropTypes.string.isRequired,
+    // updateName:PropTypes.string.isRequired,
     getFormInstance:PropTypes.func.isRequired
 }
