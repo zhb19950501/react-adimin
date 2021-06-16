@@ -77,3 +77,8 @@ export const reqAddCategory = (categoryName,parentId)=>{
 export const reqUpdateCategory = ({categoryName,categoryId})=>{
     return ajax("/manage/category/update",{categoryName,categoryId},"POST")
 }
+
+
+export const reqProducts=(pageNum,pageSize)=>{
+    return ajax("manage/product/list",{pageNum,pageSize})
+}
