@@ -80,5 +80,13 @@ export const reqUpdateCategory = ({categoryName,categoryId})=>{
 
 
 export const reqProducts=(pageNum,pageSize)=>{
-    return ajax("manage/product/list",{pageNum,pageSize})
+    return ajax("/manage/product/list",{pageNum,pageSize})
+}
+
+export const reqSearchProducts=(pageNum,pageSize,productName,productType)=>{
+    return ajax("/manage/product/search",{
+        pageNum,
+        pageSize,
+        [productType]:productName
+    })
 }
