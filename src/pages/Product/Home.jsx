@@ -13,14 +13,19 @@ export default function Product() {
     const [dataSource, setDataSource] = useState([])
     const [total, setTotal] = useState(0)
 
-    useEffect(async () => {
-        const result = await reqProducts(pageNum,pageSize)
-        if(result.status === 0){
-            const {total,list} = result.data
-            setDataSource(list)
-            setTotal(total)
-        }
+    useEffect(()=>{
+        (async () => {
+            const {data:result} = await reqProducts(pageNum,pageSize)
+            
+            if(result.status === 0){
+                const {total,list} = result.data
+                setDataSource(list)
+                setTotal(total)
+            }
+        })()
     }, [])
+        
+        
     const columns = [
         {
             title: '商品名称',
