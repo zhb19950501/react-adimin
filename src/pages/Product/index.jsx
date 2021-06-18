@@ -7,9 +7,9 @@ import AddUpdate from "./AddUpdate"
 export default function Product(params) {
     return(
         <Switch>
-            <Route path="/product" component={Home} exact/>
             <Route path="/product/detail" component={Detail}/>
             <Route path="/product/addupdate" component={AddUpdate}/>
+            <Route path="/product" component={Home} exact/>
             <Redirect to="/product"></Redirect>
         </Switch>
     )

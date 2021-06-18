@@ -90,3 +90,14 @@ export const reqSearchProducts=(pageNum,pageSize,productName,productType)=>{
         [productType]:productName
     })
 }
+
+export const reqProductCategoryName= (categoryId)=>{
+    return new Promise(async(resolve,reject)=>{
+        const result = await ajax("/manage/category/info",{categoryId})
+        if(result.statusText==="OK"){
+            resolve(result.data.data.name)   
+        }else{
+            message.error("获取所属分类失败")
+        }
+    })
+}

@@ -19,7 +19,17 @@
 
 
 ## React
-    this.props.location.pathname
+    1.this.props.location.pathname 获取路由组件的地址
+    2.this.props.location.state 获取跳转过程传递的对象
+    3.const [state,dispacth()] = useReducer(loginReducer,initState)
+      const loginReducer = (state,action)=>{
+          switch(action.type){
+              case "login"
+              return {...state,login:true}
+          }
+      }
+
+      dispatch({type:login})
 
 
 ## antd

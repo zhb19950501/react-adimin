@@ -1,0 +1,9 @@
+.product-detail .list-item {
+  justify-content: flex-start;
+}
+.product-detail .left {
+  font-size: 20px;
+  font-weight: bold;
+  margin-right: 15px;
+}
+/*# sourceMappingURL=./index.css.map */

@@ -5,6 +5,7 @@ import { PlusOutlined } from "@ant-design/icons"
 import { PAGE_SIZE } from "../../utils/constance"
 import { reqProducts, reqSearchProducts } from "../../api"
 import LinkButton from "../../components/LinkButton"
+import { useHistory, useLocation } from "react-router-dom"
 
 
 const Option = Select.Option
@@ -14,8 +15,12 @@ export default function Product() {
     const [productType, setproductType] = useState("productName")
     const [productName, setproductName] = useState("")
     const [loading,setLoading] = useState(true)
+    const [pageNum,setPageNum] = useState(1)
+    const history = useHistory()
+    const location = useLocation()
 
     const getProductsData = async (pageNum, productName, productType) => {
+        // console.log("getProductsData")
         setLoading(true)
         if (!productName) {
             const { data: result } = await reqProducts(pageNum, PAGE_SIZE)
@@ -30,7 +35,7 @@ export default function Product() {
             if (result.status === 0) {
                 setLoading(false)
                 const { total, list } = result.data
-                console.log(list)
+                // console.log(list)
                 setDataSource(list)
                 setTotal(total)
             }
@@ -39,8 +44,15 @@ export default function Product() {
     }
 
     useEffect(() => {
-        getProductsData(1)
-    }, [])
+        // console.log("useEffect")
+        if(location.state){
+            const {pageNum} = location.state
+            setPageNum(pageNum)
+            getProductsData(pageNum)
+        }else{
+            getProductsData(1)
+        }
+    }, [location])
 
 
     const columns = [
@@ -75,10 +87,10 @@ export default function Product() {
         {
             title: '操作',
             width: 100,
-            render: () => {
+            render: (product) => {
                 return (
                     <span>
-                        <LinkButton>详情</LinkButton>
+                        <LinkButton onClick={()=>{history.push("/product/detail",{product,pageNum})}}>详情</LinkButton>
                         <LinkButton>修改</LinkButton>
                     </span>
                 )
@@ -86,6 +98,7 @@ export default function Product() {
         },
     ]
 
+    // console.log("func"+pageNum)
     return (
         <Card
             title={
@@ -121,12 +134,16 @@ export default function Product() {
                 columns={columns}
                 pagination={
                     {
+                        current:pageNum,
                         pageSize: PAGE_SIZE,
                         total,
-                        onChange: getProductsData,
+                        onChange: (newPageNum)=>{
+                            getProductsData(newPageNum)
+                            setPageNum(newPageNum)
+                        },
                         showSizeChanger: false,
-                        showQuickJumper:true
-
+                        showQuickJumper:true,
+                        
                     }
                 }
             >
