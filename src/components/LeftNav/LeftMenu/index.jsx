@@ -43,9 +43,11 @@ class LeftMenu extends React.Component {
 
   // 使用reduce实现上面map的功能
   getNodesFromMenuListUseReduce=(menuList)=> {
+    // 获取当前地址
     const path = this.props.location.pathname
 
     return menuList.reduce((pre, menuEle) => {
+      // 如果没有子菜单，则直接生成menuItem标签
       if (!menuEle.children) {
         pre.push((
           <Menu.Item key={menuEle.key} icon={<menuEle.icon />}>
@@ -53,12 +55,16 @@ class LeftMenu extends React.Component {
           </Menu.Item>
         ))}
       else{
+        // 判断当前路由地址是否为某个父级菜单的子菜单的key，是的话，刷新后默认打开该父级菜单
         const openEle = menuEle.children.find((subMenuEle)=>{
-            return subMenuEle.key === path
+            // 判断当前地址中是否包含子菜单的路由地址，如果包含，则需要在刷新时打开父级菜单
+            // 如果包含，那么indexOf返回0，不包含则返回-1
+            return path.indexOf(subMenuEle.key) === 0
         })
         if(openEle){
           this.openKeys = menuEle.key
         }
+        // 
         pre.push((
           <SubMenu key={menuEle.key} icon={<menuEle.icon />} title={menuEle.title}>
             {this.getNodesFromMenuListUseReduce(menuEle.children)}
@@ -70,7 +76,10 @@ class LeftMenu extends React.Component {
   }
 
   render() {
-    const path = this.props.location.pathname
+    let path = this.props.location.pathname
+    if (path.indexOf("/product")!== -1){
+      path = "/product"
+    }
     return (
       
         <Menu

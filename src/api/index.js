@@ -51,7 +51,7 @@ export const reqWeather = () => {
 
 }
 
-// /manage/category/list?parentId=0 获取分类列表
+// /manage/category/list?parentId=0 根据ID获取分类列表
 export const reqCategory =  (parentId)=>{
     return new Promise(
         async (resolve,reject)=>{
@@ -94,6 +94,7 @@ export const reqSearchProducts=(pageNum,pageSize,productName,productType)=>{
 export const reqProductCategoryName= (categoryId)=>{
     return new Promise(async(resolve,reject)=>{
         const result = await ajax("/manage/category/info",{categoryId})
+        console.log(result)
         if(result.statusText==="OK"){
             resolve(result.data.data.name)   
         }else{

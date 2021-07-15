@@ -16,10 +16,9 @@ export default function Detail() {
   const { pageNum } = location.state
   const { name, desc, detail, price, categoryId, pCategoryId } = location.state.product
   
-  console.log("detail")
   useEffect(() => {
-    console.log("useEffect")
     const getProductNames = async (pCategoryId,categoryId) => {
+      // 通过多个await发送多个请求，后面的请求是在前一个发送成功返回之后才发
       if (pCategoryId === "0") {
         setPName("一级分类")
       } else {
@@ -33,7 +32,7 @@ export default function Detail() {
     getProductNames(pCategoryId,categoryId)
   }, [pCategoryId,categoryId])
 
-  // console.log(location)
+  console.log(location)
   return (
 
     <Card

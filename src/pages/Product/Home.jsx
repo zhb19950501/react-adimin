@@ -88,10 +88,11 @@ export default function Product() {
             title: '操作',
             width: 100,
             render: (product) => {
+                // console.log(product)
                 return (
                     <span>
                         <LinkButton onClick={()=>{history.push("/product/detail",{product,pageNum})}}>详情</LinkButton>
-                        <LinkButton>修改</LinkButton>
+                        <LinkButton onClick={()=>{history.push("/product/addupdate",{product,pageNum})}}>修改</LinkButton>
                     </span>
                 )
             }
@@ -120,7 +121,7 @@ export default function Product() {
                 </span>}
 
             extra={
-                <Button type="primary">
+                <Button type="primary" onClick={()=>{history.push("/product/addupdate",{pageNum})}}>
                     <PlusOutlined></PlusOutlined>
                     添加商品
                 </Button>
