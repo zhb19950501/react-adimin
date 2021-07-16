@@ -5,37 +5,56 @@ import { useHistory, useLocation } from "react-router-dom";
 import { reqProductCategoryName } from "../../api"
 import LinkButton from "../../components/LinkButton"
 import "./index.less"
-import { useEffect, useState } from "react";
+import { useEffect, useReducer } from "react";
 const Item = List.Item
 
+
+
+
+
 export default function Detail() {
-  const [pName, setPName] = useState("")
-  const [cName, setCName] = useState("")
   const history = useHistory()
   const location = useLocation()
   const { pageNum } = location.state
   const { name, desc, detail, price, categoryId, pCategoryId } = location.state.product
-  
-  console.log("detail")
+
+  const reducer = (state, action) => {
+    switch (action.type) {
+      case "NOT_FIRST_LEVEL":{
+        const{pName,cName} = action
+        return { ...state, pName, cName }
+      }
+      case "FIRST_LEVEL":{
+        const pName = "一级分类"
+        const{cName} = action
+        return { ...state, pName, cName }
+      }
+      default:
+        return state
+    }
+  }
+
+  const [state, dispatch] = useReducer(reducer, { pName: "", cName: "" })
+  const { cName, pName } = state
+  console.log("@@", state)
+
+
   useEffect(() => {
-    console.log("useEffect")
-    const getProductNames = async (pCategoryId,categoryId) => {
+    // console.log("useEffect")
+    const getCategoryNames = async () => {
+      const cName = await reqProductCategoryName(categoryId)
       if (pCategoryId === "0") {
-        setPName("一级分类")
+        dispatch({ type: "FIRST_LEVEL",cName })
       } else {
         const pName = await reqProductCategoryName(pCategoryId)
-        setPName(pName)
+        dispatch({ type: "NOT_FIRST_LEVEL", pName, cName })
       }
-      const cName = await reqProductCategoryName(categoryId)
-      setCName(cName)
-      
     }
-    getProductNames(pCategoryId,categoryId)
-  }, [pCategoryId,categoryId])
-
+    getCategoryNames()
+  }, [categoryId, pCategoryId])
   // console.log(location)
-  return (
 
+  return (
     <Card
       title={
         <span>
@@ -64,7 +83,7 @@ export default function Detail() {
         </Item>
         <Item className="list-item">
           <span className="left">所属分类</span>
-          <span className="right">{pName + "  -->  " + cName}</span>
+          <span className="right">{pName + '---->' + cName}</span>
         </Item>
         <Item className="list-item">
           <span className="left">商品图片</span>
