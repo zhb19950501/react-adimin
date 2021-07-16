@@ -9,6 +9,7 @@ import { ArrowLeftOutlined } from "@ant-design/icons"
 import LinkButton from "../../components/LinkButton"
 import LazyOptions from "./LazyOptions"
 import PicturesWall from "./PicturesWall"
+import RichTextEditor from "./RichTextEditor"
 /*
   要做表单验证所以使用Form组件
 */
@@ -40,6 +41,7 @@ export default function AddUpdate() {
 
   // 表单提交时的回调-->发送请求添加商品
   const onFinish = (value) => {
+    
     console.log(value)
   }
   // 修改页的表单初始化值
@@ -48,8 +50,11 @@ export default function AddUpdate() {
     initialValues = {
       ...product,
       categorys: [product.pCategoryId, product.categoryId,]
+
     }
   }
+
+  console.log("render addUpdate")
   return (
     <Card title={title}>
 
@@ -66,11 +71,11 @@ export default function AddUpdate() {
         <Item label="商品分类" name="categorys" rules={[{ required: true, message: "请输入商品分类" }]} >
           <LazyOptions />
         </Item>
-        <Item label="商品图片">
-          <PicturesWall/>
+        <Item label="商品图片" name = "imgs">
+          <PicturesWall />
         </Item>
         <Item label="商品详情">
-          <Input placeholder="请输入商品名称"></Input>
+          <RichTextEditor></RichTextEditor>
         </Item>
         <Item>
           <Button type="primary" htmlType="submit">

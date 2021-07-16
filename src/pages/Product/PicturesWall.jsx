@@ -1,6 +1,8 @@
 import React from 'react'
-import { Upload, Modal } from 'antd';
+import { Upload, Modal, message } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
+import {reqRemovePicture} from "../../api/index"
+import {BASE_IMG_URL} from "../../utils/constance"
 
 function getBase64(file) {
   return new Promise((resolve, reject) => {
@@ -12,49 +14,32 @@ function getBase64(file) {
 }
 
 export default class PicturesWall extends React.Component {
-  state = {
-    previewVisible: false,
-    previewImage: '',
-    previewTitle: '',
-    fileList: [
-      {
-        uid: '-1',
-        name: 'image.png',
-        status: 'done',
-        url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-      },
-      {
-        uid: '-2',
-        name: 'image.png',
-        status: 'done',
-        url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-      },
-      {
-        uid: '-3',
-        name: 'image.png',
-        status: 'done',
-        url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-      },
-      {
-        uid: '-4',
-        name: 'image.png',
-        status: 'done',
-        url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-      },
-      {
-        uid: '-xxx',
-        percent: 50,
-        name: 'image.png',
-        status: 'uploading',
-        url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-      },
-      {
-        uid: '-5',
-        name: 'image.png',
-        status: 'error',
-      },
-    ],
-  };
+  constructor(props){
+    super(props)
+    let fileList = []
+    // 当为修改页面时，AddUpdate父页面会传递初始值，因此组件会收到props，当value值存在且不为空时表示有图片信息
+    if(props.value && props.value.length > 0 && props.value[0] !== ""){
+      fileList = props.value.map((img,index)=>{
+        return {
+          uid:-index,
+          name:img,
+          status:"done",
+          url:BASE_IMG_URL + img
+        }
+      })
+    }
+    this.state = {
+      previewVisible: false,
+      previewImage: '',
+      previewTitle: '',
+      fileList
+    }
+  }
+
+
+  getPicturesName = ()=> this.state.fileList.map(file=>file.name)
+      
+  
 
   handleCancel = () => this.setState({ previewVisible: false });
 
@@ -70,7 +55,20 @@ export default class PicturesWall extends React.Component {
     });
   };
 
-  handleChange = ({ fileList }) => this.setState({ fileList });
+  handleChange = async ({ fileList,file }) => {
+    if(file.status === "done" && file.response.status===0){
+      message.success("上传成功")
+      const {name,url} = file.response.data
+      file = {...fileList[fileList.length-1],name,url}
+      fileList[fileList.length-1] = file
+      console.log(fileList)
+    }else if (file.status === "removed"){
+      reqRemovePicture(file.name)
+    }
+    const value = this.getPicturesName()
+    this.props.onChange(value)
+    this.setState({ fileList })
+  };
 
   render() {
     const { previewVisible, previewImage, fileList, previewTitle } = this.state;
@@ -83,7 +81,8 @@ export default class PicturesWall extends React.Component {
     return (
       <>
         <Upload
-          action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+          name="image"
+          action="/manage/img/upload"
           listType="picture-card"
           fileList={fileList}
           onPreview={this.handlePreview}

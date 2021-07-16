@@ -49,7 +49,7 @@ export default function LazyOptions (props) {
             }
             return o
           })
-          console.log("effect",options)
+          // console.log("effect",options)
           setOptions(options)
           setDefaultValue([pCategoryId,categoryId])
         }
@@ -76,6 +76,6 @@ export default function LazyOptions (props) {
       setDefaultValue(value)
     }
 
-    console.log("组件重新渲染",options)
+    // console.log("组件重新渲染",options)
     return <Cascader options={options} loadData={loadData} onChange={onChange} changeOnSelect value={[...defaultValue]} />;
   };
