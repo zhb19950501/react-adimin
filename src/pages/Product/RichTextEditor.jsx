@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { EditorState, convertToRaw } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import draftToHtml from 'draftjs-to-html';
-import htmlToDraft from 'html-to-draftjs';
-// import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css"
+// import htmlToDraft from 'html-to-draftjs';
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css"
 
 export default class RichTextEditor extends Component {
   state = {
@@ -23,7 +23,7 @@ export default class RichTextEditor extends Component {
         <Editor
           editorState={editorState}
           wrapperClassName="demo-wrapper"
-          editorClassName="demo-editor"
+          editorStyle={{border: "1px solid black",minHeight:200}}
           onEditorStateChange={this.onEditorStateChange}
         />
         <textarea

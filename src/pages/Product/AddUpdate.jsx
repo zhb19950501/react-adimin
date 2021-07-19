@@ -74,7 +74,7 @@ export default function AddUpdate() {
         <Item label="商品图片" name = "imgs">
           <PicturesWall />
         </Item>
-        <Item label="商品详情">
+        <Item label="商品详情" labelCol= { {span:2} } wrapperCol= { {span: 20} }>
           <RichTextEditor></RichTextEditor>
         </Item>
         <Item>
