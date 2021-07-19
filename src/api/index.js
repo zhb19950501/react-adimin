@@ -51,7 +51,7 @@ export const reqWeather = () => {
 
 }
 
-// /manage/category/list?parentId=0 获取分类列表
+// /manage/category/list?parentId=0 根据ID获取分类列表
 export const reqCategory =  (parentId)=>{
     return new Promise(
         async (resolve,reject)=>{
@@ -90,14 +90,35 @@ export const reqSearchProducts=(pageNum,pageSize,productName,productType)=>{
         [productType]:productName
     })
 }
+export const reqUpdateStatus = (productId,status)=>{
+    return ajax("/manage/product/updateStatus",{productId,status},"POST")
+}
 
 export const reqProductCategoryName= (categoryId)=>{
     return new Promise(async(resolve,reject)=>{
         const result = await ajax("/manage/category/info",{categoryId})
+        console.log(result)
         if(result.statusText==="OK"){
             resolve(result.data.data.name)   
         }else{
             message.error("获取所属分类失败")
         }
     })
+} 
+
+export const reqRemovePicture = (name)=>{
+    return new Promise(
+        async (resolve,reject)=>{
+            const result = await ajax("/manage/img/delete",{name},"POST")
+            if(result.data.status === 0){
+                message.success("删除成功")
+                resolve()
+            }else{
+                message.error(result.data.msg)
+            }
+        }
+    )
+    
+    
+    
 }

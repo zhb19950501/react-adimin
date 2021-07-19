@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react"
-import { Card, Table, Select, Input, Button } from "antd"
+import { Card, Table, Select, Input, Button, message } from "antd"
 import { PlusOutlined } from "@ant-design/icons"
 
 import { PAGE_SIZE } from "../../utils/constance"
-import { reqProducts, reqSearchProducts } from "../../api"
+import { reqProducts, reqSearchProducts,reqUpdateStatus } from "../../api"
 import LinkButton from "../../components/LinkButton"
 import { useHistory, useLocation } from "react-router-dom"
 
@@ -42,7 +42,24 @@ export default function Product() {
         }
 
     }
-
+    const changeSellStatus = async (rowData,index)=>{
+        setLoading(true)
+        const {_id,status} = rowData
+        const newStatus = 1 - status 
+        const result = await reqUpdateStatus(_id,newStatus)
+        setLoading(false)
+        if (result.data.status === 0){
+            if(newStatus === 0 ){
+                message.success("已下架")
+            }else{
+                message.success("已上架")
+            }
+            dataSource[index].status = newStatus
+            setDataSource([...dataSource])
+        }else{
+            message.error("更新失败")
+        }
+    }
     useEffect(() => {
         // console.log("useEffect")
         if(location.state){
@@ -75,10 +92,10 @@ export default function Product() {
             title: '状态',
             width: 100,
             dataIndex: 'status',
-            render: (status) => {
+            render: (status,rowData,index) => {
                 return (
                     <span>
-                        <Button type="primary">{status === 1 ? "下架" : "上架"}</Button>
+                        <Button type="primary" onClick={()=>{changeSellStatus(rowData,index)}}>{status === 1 ? "下架" : "上架"}</Button>
                         <span>{status === 1 ? "在售" : "已下架"}</span>
                     </span>
                 )
@@ -88,10 +105,11 @@ export default function Product() {
             title: '操作',
             width: 100,
             render: (product) => {
+                // console.log(product)
                 return (
                     <span>
                         <LinkButton onClick={()=>{history.push("/product/detail",{product,pageNum})}}>详情</LinkButton>
-                        <LinkButton>修改</LinkButton>
+                        <LinkButton onClick={()=>{history.push("/product/addupdate",{product,pageNum})}}>修改</LinkButton>
                     </span>
                 )
             }
@@ -120,7 +138,7 @@ export default function Product() {
                 </span>}
 
             extra={
-                <Button type="primary">
+                <Button type="primary" onClick={()=>{history.push("/product/addupdate",{pageNum})}}>
                     <PlusOutlined></PlusOutlined>
                     添加商品
                 </Button>
