@@ -6,6 +6,7 @@ import { reqProductCategoryName } from "../../api"
 import LinkButton from "../../components/LinkButton"
 import "./index.less"
 import { useEffect, useReducer } from "react";
+import {BASE_IMG_URL} from "../../utils/constance"
 const Item = List.Item
 
 
@@ -16,8 +17,8 @@ export default function Detail() {
   const history = useHistory()
   const location = useLocation()
   const { pageNum } = location.state
-  const { name, desc, detail, price, categoryId, pCategoryId } = location.state.product
-
+  const { name, desc, detail, price, categoryId, pCategoryId,imgs } = location.state.product
+  console.log(imgs)
   const reducer = (state, action) => {
     switch (action.type) {
       case "NOT_FIRST_LEVEL":{
@@ -36,7 +37,7 @@ export default function Detail() {
 
   const [state, dispatch] = useReducer(reducer, { pName: "", cName: "" })
   const { cName, pName } = state
-  console.log("@@", state)
+  // console.log("@@", state)
 
 
   useEffect(() => {
@@ -87,7 +88,7 @@ export default function Detail() {
         </Item>
         <Item className="list-item">
           <span className="left">商品图片</span>
-          <span className="right">图片</span>
+          {imgs.map((img)=>{return <img src={BASE_IMG_URL+img} alt={img} style={{height:"100px"}}></img>})}
         </Item>
         <Item className="list-item">
           <span className="left">商品详情</span>

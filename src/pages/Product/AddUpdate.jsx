@@ -3,13 +3,15 @@ import {
   Card,
   Form,
   Input,
-  Button
+  Button,
+  message
 } from "antd"
 import { ArrowLeftOutlined } from "@ant-design/icons"
 import LinkButton from "../../components/LinkButton"
 import LazyOptions from "./LazyOptions"
 import PicturesWall from "./PicturesWall"
 import RichTextEditor from "./RichTextEditor"
+import { reqAddOrUpdateProduct } from "../../api"
 /*
   要做表单验证所以使用Form组件
 */
@@ -40,9 +42,25 @@ export default function AddUpdate() {
   const validatePrice = (_, value) => value <= 0 ? Promise.reject(new Error("商品价格必须大于0")) : Promise.resolve()
 
   // 表单提交时的回调-->发送请求添加商品
-  const onFinish = (value) => {
-    
+  const onFinish = async(value) => {
+    const [pCategoryId,categoryId] = value.categorys
+    delete value.categorys
+    if(isUpdate){
+      value._id = product._id
+    }
+    value = {...value,categoryId,pCategoryId}
     console.log(value)
+    // 发送请求
+    const result = await reqAddOrUpdateProduct(value)
+    if(result.data.status === 0){
+      if(result.data.data){
+        message.success("添加成功")
+      }else{
+        message.success("更新成功")
+      }
+    }else{
+      message.error("失败")
+    }
   }
   // 修改页的表单初始化值
   let initialValues = {}
@@ -54,7 +72,6 @@ export default function AddUpdate() {
     }
   }
 
-  console.log("render addUpdate")
   return (
     <Card title={title}>
 
@@ -74,7 +91,7 @@ export default function AddUpdate() {
         <Item label="商品图片" name = "imgs">
           <PicturesWall />
         </Item>
-        <Item label="商品详情" labelCol= { {span:2} } wrapperCol= { {span: 20} }>
+        <Item label="商品详情" name="detail" labelCol= { {span:2} } wrapperCol= { {span: 20} }>
           <RichTextEditor></RichTextEditor>
         </Item>
         <Item>

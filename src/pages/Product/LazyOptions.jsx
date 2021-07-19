@@ -71,7 +71,7 @@ export default function LazyOptions (props) {
     }
     // 级联菜单选择变化时的回调
     const onChange = (value) => {
-      // 回传给表单选择的分类值[categoryId,parentId]
+      // 回传给表单选择的分类值[parentId,categoryId]
       props.onChange([value[value.length - 1], value[value.length - 2] || 0])
       setDefaultValue(value)
     }

@@ -118,7 +118,8 @@ export const reqRemovePicture = (name)=>{
             }
         }
     )
-    
-    
-    
+}
+
+export const reqAddOrUpdateProduct = (product)=>{
+    return ajax("/manage/product/"+(product._id?"update":"add"),product,"POST")
 }

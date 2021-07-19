@@ -37,7 +37,7 @@ export default class PicturesWall extends React.Component {
   }
 
 
-  getPicturesName = ()=> this.state.fileList.map(file=>file.name)
+  getPicturesName = (fileList)=> fileList.map(file=>file.name)
       
   
 
@@ -55,17 +55,17 @@ export default class PicturesWall extends React.Component {
     });
   };
 
-  handleChange = async ({ fileList,file }) => {
+  handleChange =  ({ fileList,file }) => {
     if(file.status === "done" && file.response.status===0){
       message.success("上传成功")
       const {name,url} = file.response.data
       file = {...fileList[fileList.length-1],name,url}
       fileList[fileList.length-1] = file
-      console.log(fileList)
+      console.log(fileList,url)
     }else if (file.status === "removed"){
       reqRemovePicture(file.name)
     }
-    const value = this.getPicturesName()
+    const value = this.getPicturesName(fileList)
     this.props.onChange(value)
     this.setState({ fileList })
   };
