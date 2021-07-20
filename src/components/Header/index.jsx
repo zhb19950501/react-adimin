@@ -46,13 +46,16 @@ export default function Header() {
     useEffect(() => {
         const getHeaderName = () => {
             const findName = (menuList) => {
-                menuList.forEach((menuEle) => {
-                    if (menuEle.key === pathname) {
+                menuList.some((menuEle) => {
+                    let flag = false
+                    if (menuEle.key === pathname || pathname.indexOf(menuEle.key) === 0) {
                         const title = menuEle.title
                         setHeaderName(title)
+                        flag = true
                     } else if (menuEle.children) {
                         findName(menuEle.children)
                     }
+                    return flag
                 })
             }
             findName(menuList)

@@ -170,7 +170,6 @@ export default class Category extends Component {
                     <span>
                         <LinkButton onClick={() => { this.showUpdateModal(text) }}>修改分类</LinkButton>
                         <LinkButton onClick={() => { this.handleCheckChild(text) }}>查看子分类</LinkButton>
-
                     </span>
                 )
             }

@@ -98,10 +98,10 @@ export const reqProductCategoryName= (categoryId)=>{
     return new Promise(async(resolve,reject)=>{
         const result = await ajax("/manage/category/info",{categoryId})
         console.log(result)
-        if(result.statusText==="OK"){
+        if(result.data.status===0){
             resolve(result.data.data.name)   
         }else{
-            message.error("获取所属分类失败")
+            message.error(result.data.msg)
         }
     })
 } 
@@ -122,4 +122,8 @@ export const reqRemovePicture = (name)=>{
 
 export const reqAddOrUpdateProduct = (product)=>{
     return ajax("/manage/product/"+(product._id?"update":"add"),product,"POST")
+}
+
+export const reqRoles = ()=>{
+    return ajax("/manage/role/list")
 }

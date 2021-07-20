@@ -43,7 +43,8 @@ export default function AddUpdate() {
 
   // 表单提交时的回调-->发送请求添加商品
   const onFinish = async(value) => {
-    const [pCategoryId,categoryId] = value.categorys
+    console.log("value",value)
+    const [categoryId,pCategoryId] = value.categorys
     delete value.categorys
     if(isUpdate){
       value._id = product._id

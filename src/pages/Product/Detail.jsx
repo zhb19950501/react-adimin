@@ -18,7 +18,7 @@ export default function Detail() {
   const location = useLocation()
   const { pageNum } = location.state
   const { name, desc, detail, price, categoryId, pCategoryId,imgs } = location.state.product
-  console.log(imgs)
+  // console.log(imgs)
   const reducer = (state, action) => {
     switch (action.type) {
       case "NOT_FIRST_LEVEL":{
@@ -88,7 +88,7 @@ export default function Detail() {
         </Item>
         <Item className="list-item">
           <span className="left">商品图片</span>
-          {imgs.map((img)=>{return <img src={BASE_IMG_URL+img} alt={img} style={{height:"100px"}}></img>})}
+          {imgs.map((img)=>{return <img src={BASE_IMG_URL+img} alt={img} style={{height:"100px"}} key={img}></img>})}
         </Item>
         <Item className="list-item">
           <span className="left">商品详情</span>
