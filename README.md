@@ -39,7 +39,11 @@
 
     5.useRef(initValue) 返回一个容器，要获取其中的值使用.current属性，保存在其中的值具有持久化的特性，在组件卸载前都不会发生变化
 
+    6.useEffect(callback,deps) 
+        deps是浅比较，也就是比较内存地址，不比较其内部数据是否变化
+
 
 ## antd
-    form 表单初始值旨在每次表格渲染的时候会套用，要实时更改，应该使用form.setFieldsValue({FormItemName:newValue})
+    Form 表单初始值只在每次表格渲染的时候会套用，要实时更改，应该使用form.setFieldsValue({FormItemName:newValue})
         该方法传入的配置对象，键为form表单的name属性值，name在antd的组件里相当于它的Id
+    Form 表单自动收集其中的Item下的数据，当给Item设置了name后，Item下的组件会收到两个参数，value和onChange

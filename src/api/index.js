@@ -106,6 +106,7 @@ export const reqProductCategoryName= (categoryId)=>{
     })
 } 
 
+
 export const reqRemovePicture = (name)=>{
     return new Promise(
         async (resolve,reject)=>{
@@ -126,4 +127,12 @@ export const reqAddOrUpdateProduct = (product)=>{
 
 export const reqRoles = ()=>{
     return ajax("/manage/role/list")
+}
+
+export const reqAddRole = (roleName)=>{
+    return ajax("/manage/role/add",roleName,"POST")
+}
+
+export const reqUpdateRole = (authRole) =>{
+    return ajax("manage/role/update",authRole,"POST")
 }
