@@ -13,6 +13,7 @@ import User from "../User"
 import Bar from "../Charts/Bar"
 import Line from "../Charts/Line"
 import Pie from "../Charts/Pie"
+import Test from "../Test"
 
 export default class Admin extends Component {
     render() {
@@ -36,6 +37,7 @@ export default class Admin extends Component {
                                 <Route path="/charts/bar" component={Bar}></Route>
                                 <Route path="/charts/line" component={Line}></Route>
                                 <Route path="/charts/pie" component={Pie}></Route>
+                                <Route path="/test" component={Test}></Route>
                                 <Redirect to="/home"/>
                             </Switch>
                         </Content>
