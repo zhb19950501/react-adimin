@@ -102,6 +102,8 @@ export default class Role extends Component {
 
 
     handleAuthRoleModalCancel= ()=>{
+        const {menus} = this.state.rowData
+        this.form.setFieldsValue({authMenu:menus})
         this.setState({ authRoleVisibleStatus: false })
         
     }

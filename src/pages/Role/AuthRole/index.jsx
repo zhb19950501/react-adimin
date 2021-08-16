@@ -23,7 +23,7 @@ const AuthTree = (props) => {
         setcheckedKeys(checkedKeysValue)
         onChange(checkedKeysValue)
     }
-    console.log("authtree",value)
+    // console.log("authtree",value)
     return (
         <Tree
             checkable
@@ -45,7 +45,10 @@ export default function AuthRole(props) {
         // console.log("AUTHROLE EFFECT")
         getFormInstance(form)
     }, [form,getFormInstance])
-    form.setFieldsValue({authMenu:menus})
+
+    useEffect(() => {
+        form.setFieldsValue({authMenu:menus})
+    }, [menus,form])
     return (
         <Form
             form={form}

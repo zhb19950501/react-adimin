@@ -18,7 +18,7 @@ export const reqLogin = (username, password) => ajax("/login", {
     password
 }, "POST")
 
-export const reqAddUser = (user) => ajax("/manage/user/add", user, "POST")
+
 
 export const reqWeather = () => {
     const reqCityAdcode = ()=>{
@@ -134,5 +134,23 @@ export const reqAddRole = (roleName)=>{
 }
 
 export const reqUpdateRole = (authRole) =>{
-    return ajax("manage/role/update",authRole,"POST")
+    return ajax("/manage/role/update",authRole,"POST")
+}
+
+//获取用户
+export const reqUsers = ()=>{
+    return ajax("/manage/user/list")
+}
+
+//删除用户
+export const reqDeleteUser = (userId)=>{
+    return ajax("/manage/user/delete",{userId},"POST")
+}
+
+// 添加
+export const reqAddUser = (user) => ajax("/manage/user/add", user, "POST")
+
+//更新用户
+export  const reqUpdateUser = (user)=>{
+    return ajax("/manage/user/update",user,"POST")
 }

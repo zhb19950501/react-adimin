@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link,withRouter} from "react-router-dom"
 import { Menu } from 'antd';
-
+import  localStoreUtils from "../../../utils/localStoreUtils"
 // import {
 //   AppstoreOutlined,
 //   MenuUnfoldOutlined,
@@ -14,12 +14,35 @@ import { Menu } from 'antd';
 
 import menuList from "../../../config/menuConfig"
 const { SubMenu } = Menu;
+const user = localStoreUtils.getUser()
+const showMenuKeys = user.role.menus
+
+const getShowMenuUseReduce = (menuList,showMenuKeys,parentMenu)=>{
+  return menuList.reduce(
+    (pre,cur)=>{
+      if(showMenuKeys.indexOf(cur.key)!==-1){
+       if(parentMenu){
+        parentMenu.children.push(cur)
+        pre.push(parentMenu)
+       } else{
+        pre.push(cur)
+       }
+      }else if(cur.children){
+        let parentMenu = {...cur,children:[]}
+        const result = getShowMenuUseReduce(cur.children,showMenuKeys,parentMenu)[0]
+        pre.push(result)
+      }
+      return pre
+  },[])
+}
+const showMenu = getShowMenuUseReduce(menuList,showMenuKeys)
+// console.log("showmenu, showMenuKeys",showMenu,showMenuKeys)
 
 class LeftMenu extends React.Component {
   constructor(props){
     super(props)
     // 初始化得到菜单列表节点数组
-    this.menuNodes = this.getNodesFromMenuListUseReduce(menuList)
+    this.menuNodes = this.getNodesFromMenuListUseReduce(showMenu)
   }
 
   // getNodesFromMenuList(menuList) {
@@ -49,16 +72,21 @@ class LeftMenu extends React.Component {
     return menuList.reduce((pre, menuEle) => {
       // 如果没有子菜单，则直接生成menuItem标签
       if (!menuEle.children) {
-        pre.push((
-          <Menu.Item key={menuEle.key} icon={<menuEle.icon />}>
-            <Link to={menuEle.key}>{menuEle.title}</Link>
-          </Menu.Item>
-        ))}
+        
+          pre.push((
+            <Menu.Item key={menuEle.key} icon={<menuEle.icon />}>
+              <Link to={menuEle.key}>{menuEle.title}</Link>
+            </Menu.Item>
+          ))
+        
+      }
       else{
+        // 有子菜单，判断是否有需要打开的菜单元素
         // 判断当前路由地址是否为某个父级菜单的子菜单的key，是的话，刷新后默认打开该父级菜单
+        // find() 方法返回数组中满足提供的测试函数的第一个元素的值。否则返回 undefined。
         const openEle = menuEle.children.find((subMenuEle)=>{
-            // 判断当前地址中是否包含子菜单的路由地址，如果包含，则需要在刷新时打开父级菜单
-            // 如果包含，那么indexOf返回0，不包含则返回-1
+            // 判断当前地址中是否匹配子菜单的路由地址，如果包含，则需要在刷新时打开父级菜单
+            // 如果完全匹配，那么indexOf返回0，不匹配则返回-1
             return path.indexOf(subMenuEle.key) === 0
         })
         if(openEle){
