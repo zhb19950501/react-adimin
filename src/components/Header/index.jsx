@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
-import { useLocation,useHistory } from "react-router"
+import { useHistory } from "react-router"
+import { connect } from "react-redux";
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { Modal } from 'antd';
 import LinkButton from "../../components/LinkButton"
@@ -9,16 +10,17 @@ import { reqWeather } from "../../api/"
 import { formateDate } from "../../utils/dateUtils"
 import image from "../../assets/images/login-logo.png"
 import "./index.less"
-import menuList from "../../config/menuConfig"
+// import menuList from "../../config/menuConfig"
 
 
-export default function Header() {
+function Header(props) {
     const [province, setProvince] = useState()
     const [weather, setWeather] = useState()
     const [date, setDate] = useState()
-    const [headerName, setHeaderName] = useState()
+    // const [headerName, setHeaderName] = useState()
     const username = memoryUtils.user.username
-
+    const headTitle = props.headTitle
+    
     // 只有初次渲染的时候执行一次的副作用~
     useEffect(() => {
         // 获取省份和天气数据并更新状态
@@ -41,27 +43,27 @@ export default function Header() {
     }, [])
 
     // 标题随点击更新，但是不知道该放在什么位置才能让它不要受到定时器的影响而一直重算~哇，可以把pathName做成放到useeffect钩子里~解决了这个问题
-    const Location = useLocation()
-    const pathname = Location.pathname
-    useEffect(() => {
-        const getHeaderName = () => {
-            const findName = (menuList) => {
-                menuList.some((menuEle) => {
-                    let flag = false
-                    if (menuEle.key === pathname || pathname.indexOf(menuEle.key) === 0) {
-                        const title = menuEle.title
-                        setHeaderName(title)
-                        flag = true
-                    } else if (menuEle.children) {
-                        findName(menuEle.children)
-                    }
-                    return flag
-                })
-            }
-            findName(menuList)
-        }
-        getHeaderName()
-    }, [pathname])
+    // const Location = useLocation()
+    // const pathname = Location.pathname
+    // useEffect(() => {
+    //     const getHeaderName = () => {
+    //         const findName = (menuList) => {
+    //             menuList.some((menuEle) => {
+    //                 let flag = false
+    //                 if (menuEle.key === pathname || pathname.indexOf(menuEle.key) === 0) {
+    //                     const title = menuEle.title
+    //                     setHeaderName(title)
+    //                     flag = true
+    //                 } else if (menuEle.children) {
+    //                     findName(menuEle.children)
+    //                 }
+    //                 return flag
+    //             })
+    //         }
+    //         findName(menuList)
+    //     }
+    //     getHeaderName()
+    // }, [pathname])
 
     // 退出功能的实现
     const History = useHistory()
@@ -91,7 +93,7 @@ export default function Header() {
             </div>
             <div className="header-bottom">
                 <div className="header-bottom-left">
-                    <span>{headerName}</span>
+                    <span>{headTitle}</span>
                 </div>
                 <div className="header-bottom-right">
                     <span>{date}</span>
@@ -103,3 +105,8 @@ export default function Header() {
         </div>
     )
 }
+
+export default connect(
+    (state)=>({headTitle:state.headTitle}),
+    {}
+)(Header)

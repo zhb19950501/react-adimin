@@ -15,12 +15,13 @@ import Line from "../Charts/Line"
 import Pie from "../Charts/Pie"
 import Test from "../Test"
 
+
 export default class Admin extends Component {
     render() {
         const {Footer, Sider, Content } = Layout;
         const user = memoryUtils.user
         if(!user || !user._id){
-            return <Redirect to="/login"></Redirect>
+             return <Redirect to="/login"></Redirect>
         }
         return (
                 <Layout style={{minHeight:"100%"}}>

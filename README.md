@@ -68,3 +68,16 @@
     Form 表单初始值只在每次表格渲染的时候会套用，要实时更改，应该使用form.setFieldsValue({FormItemName:newValue})
         该方法传入的配置对象，键为form表单的name属性值，name在antd的组件里相当于它的Id
     Form 表单自动收集其中的Item下的数据，当给Item设置了name后，Item下的组件会收到两个参数，value和onChange
+
+
+
+## 测试题
+
+    1. 路由组件中的地址是什么匹配规则？ 
+        <Route to="/home" component={Home}> 输入地址为/home/123时这个组件是否会被匹配？
+    
+    2. 在组件模块中，写在组件外的代码何时被执行？
+        在组件加载时？在整体初始化运行时？
+        目前看来是后者
+    
+    3.

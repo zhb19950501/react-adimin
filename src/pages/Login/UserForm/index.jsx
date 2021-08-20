@@ -16,7 +16,7 @@ export const NormalLoginForm = () => {
             const user = result.data
             memoryUtils.user = user
             localStoreUtils.saveUser(user)
-            history.replace("/")
+            history.replace("/home")
             message.success("登录成功")
         }else{
             message.error("登录失败")
